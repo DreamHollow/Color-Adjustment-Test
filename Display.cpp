@@ -24,6 +24,8 @@ void Display::init_variables()
 	this->v_width = 800;
 	this->v_height = 600;
 	this->v_bits = 32;
+	
+	// These have to both be white to get the intended final effect
 	this->left_color = sf::Color::White;
 	this->right_color = sf::Color::White;
 
@@ -41,6 +43,7 @@ void Display::init_window()
 	std::cout << "Configuration complete.\n";
 };
 
+// This is an int function to force the program to stop early if the window cannot be created
 int Display::create_display()
 {
 	if (this->vid_mode.isValid())
@@ -52,7 +55,7 @@ int Display::create_display()
 
 		std::cout << "Render window created.\n";
 	}
-	else
+	else // VideoMode parameters are invalid, so the window can't be created
 	{
 		std::cout << "A render window could not be created due to misconfiguration.\n";
 
@@ -64,7 +67,7 @@ int Display::create_display()
 
 void Display::init_lines()
 {
-	float j = 0;
+	float j = 0; // Used as a temp variable instead of an int for stability and better control
 
 	std::cout << "Emplacing line objects...\n";
 
@@ -72,7 +75,8 @@ void Display::init_lines()
 	line.setFillColor(sf::Color::White);
 	line.setSize(sf::Vector2f(1.f, 800.f));
 	line.setScale(1.f, 1.f);
-
+	
+	// Used emplacement here instead of push_back
 	this->lines.emplace_back(line); // Emplace first line
 
 	for (int i = 1; i < 800; i++) // Start one positional placement ahead
@@ -86,6 +90,7 @@ void Display::init_lines()
 	std::cout << "Line objects emplaced.\n";
 };
 
+// Used instead of relying entirely on destructor
 void Display::clear_lines()
 {
 	this->lines.clear();
@@ -99,11 +104,11 @@ void Display::set_colors()
 	
 	for (auto i = lines.begin(); i != lines.end(); i++)
 	{
-		if (i->getPosition().x < left_vector.x)
+		if (i->getPosition().x < left_vector.x) // If the lines generated before the center line
 		{
 			i->setFillColor(left_color);
 		}
-		else if (i->getPosition().x > right_vector.x)
+		else if (i->getPosition().x > right_vector.x) // If the lines generated after
 		{
 			i->setFillColor(right_color);
 		}
@@ -135,7 +140,7 @@ void Display::update()
 
 void Display::update_lines()
 {
-	for (auto a : lines)
+	for (auto a : lines) // Always updates lines to their new actual colors
 	{
 		a.getFillColor();
 		a.getPosition();
@@ -148,12 +153,12 @@ void Display::update_input()
 {
 	rate = rate + dt;
 
-	// If rate meets or exceeds the threshold, the input is registered
+	// Rate is just a delta time hack to make the program react in a stable way
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
 	{
 		if (rate > 0.5) // If half a second has passed
 		{
-			if (l_green > 0 && l_blue > 0)
+			if (l_green > 0 && l_blue > 0) // Drains green and blue leaving only red
 			{
 				std::cout << "Adjusting color: LEFT\n";
 
@@ -174,7 +179,7 @@ void Display::update_input()
 	{
 		if (rate > 0.5)
 		{
-			if (r_red > 0 && r_green > 0)
+			if (r_red > 0 && r_green > 0) // Drains red and green leaving only blue
 			{
 				std::cout << "Adjusting color: RIGHT\n";
 
@@ -193,7 +198,7 @@ void Display::update_input()
 	}
 	else
 	{
-		rate = 0; // Resets
+		rate = 0; // Resets the rate
 	}
 };
 
@@ -201,7 +206,6 @@ void Display::render()
 {
 	this->window->clear();
 
-	// Render items
 	this->render_lines();
 
 	this->window->display();
@@ -211,12 +215,12 @@ void Display::render_lines()
 {
 	for (auto it : lines)
 	{
-		this->window->draw(it); // Draw the pointer, not the stack object
+		this->window->draw(it); // Draw all the rects in the vector
 	}
 }
 void Display::update_dt()
 {
-	this->dt = clock.restart().asSeconds();
+	this->dt = clock.restart().asSeconds(); // Delta time updates on each update loop
 };
 
 void Display::graphics()
