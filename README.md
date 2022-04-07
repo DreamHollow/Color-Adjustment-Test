@@ -7,3 +7,6 @@ Despite being based on a relatively simple concept, this project was difficult t
 It's a simple color shading test; all you have to do is press the Left Arrow or Right Arrow keys on your keyboard to trigger the effect.
 
 Feel free to do whatever you want with the code; it's completely open-source AND public domain (but the SFML library it requires is not!)
+
+Disclaimer:
+Please bear in mind that only the source code for this project [Color-Adjustment-Test] is Public Domain. SFML is under a different license and therefore under the legal protections of it's existing license [zlib]
