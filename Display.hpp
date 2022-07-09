@@ -17,7 +17,7 @@ public:
 	void graphics();
 
 	// Public Objects
-	std::unique_ptr<sf::RenderWindow> window = std::make_unique<sf::RenderWindow>();
+	std::unique_ptr<sf::RenderWindow> window = std::make_unique<sf::RenderWindow>(); // Just a window that removes itself from memory after it runs
 
 private:
 	// Variables
@@ -25,13 +25,15 @@ private:
 	int v_height;
 	int v_bits;
 	float rate;
-	float dt;
+	float dt; // Delta Time
 
 	// Color Unique
+	// Left Lines
 	int l_red = 255;
 	int l_green = 255;
 	int l_blue = 255;
 
+	// Right Lines
 	int r_red = 255;
 	int r_green = 255;
 	int r_blue = 255;
