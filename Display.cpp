@@ -12,6 +12,7 @@ Display::~Display()
 {
 	this->clear_lines(); // Do this first to prevent memory issues
 
+	// Not necessary, just informs user that the memory is cleared
 	std::cout << "Lines vector capacity is now " << lines.size() << " size.\n";
 };
 
@@ -19,13 +20,13 @@ void Display::init_variables()
 {
 	std::cout << "Initializing setup...\n";
 
-	this->dt = 0;
-	this->rate = 1;
+	this->dt = 0; // Delta Time is defaulted to 0
+	this->rate = 1; // Works with Delta Time for a steady refresh rate
 	this->v_width = 800;
 	this->v_height = 600;
 	this->v_bits = 32;
 	
-	// These have to both be white to get the intended final effect
+	// The sets of lines are initialized to White on each startup
 	this->left_color = sf::Color::White;
 	this->right_color = sf::Color::White;
 
@@ -36,6 +37,7 @@ void Display::init_window()
 {
 	std::cout << "Beginning window configurations...\n";
 
+	// SFML Stuff, just uses previously initialized values for VideoMode
 	this->vid_mode.width = v_width;
 	this->vid_mode.height = v_height;
 	this->vid_mode.bitsPerPixel = v_bits;
@@ -59,6 +61,7 @@ int Display::create_display()
 	{
 		std::cout << "A render window could not be created due to misconfiguration.\n";
 
+		// No window was actually created so it's safe to terminate this function
 		return 1;
 	}
 
@@ -81,7 +84,7 @@ void Display::init_lines()
 
 	for (int i = 1; i < 800; i++) // Start one positional placement ahead
 	{
-		j = static_cast<float>(i);
+		j = static_cast<float>(i); // Used static_cast here because int and float are generally incompatible
 
 		line.setPosition(sf::Vector2f(j, 0.f));
 		this->lines.emplace_back(line);
@@ -91,6 +94,7 @@ void Display::init_lines()
 };
 
 // Used instead of relying entirely on destructor
+// Empties all line objects from the heap
 void Display::clear_lines()
 {
 	this->lines.clear();
@@ -99,8 +103,8 @@ void Display::clear_lines()
 
 void Display::set_colors()
 {
-	sf::Vector2f left_vector{ 399.f, 0.f };
-	sf::Vector2f right_vector{ 401.f, 0.f };
+	sf::Vector2f left_vector{ 399.f, 0.f }; // Every single left line except the center
+	sf::Vector2f right_vector{ 401.f, 0.f }; // Same with every single right line
 	
 	for (auto i = lines.begin(); i != lines.end(); i++)
 	{
@@ -151,6 +155,8 @@ void Display::update_lines()
 
 void Display::update_input()
 {
+	// The rate is compared to the Delta Time variable
+	// This prevents the program from executing an action too quickly and causing issues
 	rate = rate + dt;
 
 	// Rate is just a delta time hack to make the program react in a stable way
@@ -158,7 +164,7 @@ void Display::update_input()
 	{
 		if (rate > 0.5) // If half a second has passed
 		{
-			if (l_green > 0 && l_blue > 0) // Drains green and blue leaving only red
+			if (l_green > 0 && l_blue > 0) // Drains green and blue, which leaves red
 			{
 				std::cout << "Adjusting color: LEFT\n";
 
@@ -220,6 +226,10 @@ void Display::render_lines()
 }
 void Display::update_dt()
 {
+	/* The way Delta Time works is that SFML's clock object is keeping track of real time passing.
+	As a result, Delta Time is always about equal to the extremely small amount of time between resets.
+	This way, the program doesn't just execute code as quickly as it possibly can. It has a hard limit. */
+	
 	this->dt = clock.restart().asSeconds(); // Delta time updates on each update loop
 };
 
