@@ -4,12 +4,7 @@ int main()
 {
 	Display display;
 
-	{
-		while (display.window->isOpen())
-		{
-			display.graphics();
-		}
-	}
+	display.run();
 
 	return 0;
 }
