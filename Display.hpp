@@ -14,7 +14,7 @@ public:
 	virtual ~Display();
 
 	// Public Functions
-	void graphics();
+	void run();
 
 	// Public Objects
 	std::unique_ptr<sf::RenderWindow> window = std::make_unique<sf::RenderWindow>(); // Just a window that removes itself from memory after it runs

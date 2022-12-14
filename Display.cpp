@@ -233,8 +233,11 @@ void Display::update_dt()
 	this->dt = clock.restart().asSeconds(); // Delta time updates on each update loop
 };
 
-void Display::graphics()
+void Display::run()
 {
-	this->update();
-	this->render();
+	while(this->window->isOpen())
+	{
+		this->update();
+		this->render();
+	}
 };
